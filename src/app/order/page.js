@@ -4,31 +4,42 @@ import CustomerHeader from "../_components/CustomerHeader";
 import Footer from "../_components/Footer";
 import { DELIVERY_CHARGES, TAX } from "../lib/constant";
 import { useRouter } from "next/navigation";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const Page = () => {
-  const [userStorage, setUserStorage] = useState(
-    JSON.parse(localStorage.getItem("user"))
-  );
-  const [cartStorage, setCartStorage] = useState(
-    JSON.parse(localStorage.getItem("cart"))
-  );
-  const [total] = useState(() =>
-    cartStorage?.length == 1
-      ? cartStorage[0].price
-      : cartStorage?.reduce((a, b) => {
-          return a.price + b.price;
-        })
-  );
+  const [userStorage, setUserStorage] = useState([]);
+  // const [cartStorage, setCartStorage] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [componentMounted, setComponentMounted] = useState(false);
 
   const [removeCartData, setRemoveCartData] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (!total) {
-      router.push("/");
+    setComponentMounted(true);
+    const storedCart = localStorage.getItem("cart");
+    const storedUser = localStorage.getItem("user");
+    if (storedCart) {
+      const parsedCart = JSON.parse(storedCart);
+      // setCartStorage(parsedCart);
+      if (parsedCart?.length) {
+        setTotal(() =>
+          parsedCart.length == 1
+            ? parsedCart[0].price
+            : parsedCart.reduce((a, b) => {
+                return a.price + b.price;
+              })
+        );
+      }
     }
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserStorage(parsedUser);
+    }
+  }, []);
+  useEffect(() => {
+    if (!total && componentMounted) router.push("/");
   }, [total]);
-
   const orderNow = async () => {
     let user_id = JSON.parse(localStorage.getItem("user"))._id;
     let city = JSON.parse(localStorage.getItem("user")).city;
@@ -36,7 +47,7 @@ const Page = () => {
     let cart = JSON.parse(localStorage.getItem("cart"));
     let foodItemIds = cart.map((item) => item._id).toString();
     let deliveryBoyResponse = await fetch(
-      "http://localhost:3000/api/deliverypartners/" + city
+      NEXT_PUBLIC_MONGO_URL + "/api/deliverypartners/" + city
     );
     deliveryBoyResponse = await deliveryBoyResponse.json();
     let deliveryBoyIds = deliveryBoyResponse.result.map((item) => item._id);
@@ -58,7 +69,7 @@ const Page = () => {
       amount: total + DELIVERY_CHARGES + (total * TAX) / 100,
     };
 
-    let response = await fetch("http://localhost:3000/api/order", {
+    let response = await fetch(NEXT_PUBLIC_MONGO_URL + "/api/order", {
       method: "POST",
       body: JSON.stringify(collection),
     });

@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const RestaurantLogin = () => {
   const [email, setEmail] = useState();
@@ -14,7 +15,7 @@ const RestaurantLogin = () => {
     } else {
       setError(false);
     }
-    let response = await fetch("http://localhost:3000/api/restaurant", {
+    let response = await fetch(NEXT_PUBLIC_MONGO_URL + "/api/restaurant", {
       method: "POST",
       body: JSON.stringify({ email, password, login: true }),
     });

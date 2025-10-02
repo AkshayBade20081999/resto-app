@@ -4,13 +4,26 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const CustomerHeader = (props) => {
-  const userStorage =
-    localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
-  const cartStorage =
-    localStorage.getItem("cart") && JSON.parse(localStorage.getItem("cart"));
-  const [user, setUser] = useState(userStorage ? userStorage : undefined);
-  const [cartNumber, setCartNumber] = useState(cartStorage?.length);
+  const [userStorage, setUserStorage] = useState([]);
+  const [cartStorage, setCartStorage] = useState([]);
+  const [cartNumber, setCartNumber] = useState(0);
   const [cartItem, setCartItem] = useState(cartStorage);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedCart = localStorage.getItem("cart");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setUserStorage(JSON.parse(storedUser));
+    }
+    if (storedCart) {
+      setCartStorage(JSON.parse(storedCart));
+      setCartNumber(JSON.parse(storedCart)?.length);
+      setCartItem(JSON.parse(storedCart));
+    }
+  }, []);
+
   const router = useRouter();
   console.log(userStorage);
 

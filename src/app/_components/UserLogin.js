@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const UserLogin = (props) => {
   const [email, setEmail] = useState("");
@@ -9,7 +10,7 @@ const UserLogin = (props) => {
   console.log("login", props);
 
   const loginHandle = async () => {
-    let response = await fetch("http://localhost:3000/api/user/login", {
+    let response = await fetch(NEXT_PUBLIC_MONGO_URL + "/api/user/login", {
       method: "post",
       body: JSON.stringify({ email, password }),
     });

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import CustomerHeader from "../../_components/CustomerHeader";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const Page = (props) => {
   const name = props.params.name;
@@ -27,7 +28,7 @@ const Page = (props) => {
 
   const loadRestaurantDetails = async () => {
     const id = props.searchParams.id;
-    let response = await fetch("http://localhost:3000/api/customer/" + id);
+    let response = await fetch(NEXT_PUBLIC_MONGO_URL + "/api/customer/" + id);
     response = await response.json();
     if (response.success) {
       setRestaurantDetails(response.details);

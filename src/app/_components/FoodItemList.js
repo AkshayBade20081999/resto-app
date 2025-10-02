@@ -1,19 +1,20 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const FoodItemList = () => {
   const [foodItems, setFoodItems] = useState();
   const router = useRouter();
 
   useEffect(() => {
-    loadFoodItems();
+    const restaurantData = JSON.parse(localStorage.getItem("restaurantUser"));
+    if (restaurantData) loadFoodItems();
   }, []);
 
   const loadFoodItems = async () => {
-    const restaurantData = JSON.parse(localStorage.getItem("restaurantUser"));
     const resto_id = restaurantData._id;
     let response = await fetch(
-      "http://localhost:3000/api/restaurant/foods/" + resto_id
+      NEXT_PUBLIC_MONGO_URL + "/api/restaurant/foods/" + resto_id
     );
     response = await response.json();
     if (response.success) {
@@ -25,7 +26,7 @@ const FoodItemList = () => {
 
   const deleteFoodItem = async (id) => {
     let response = await fetch(
-      "http://localhost:3000/api/restaurant/foods/" + id,
+      NEXT_PUBLIC_MONGO_URL + "/api/restaurant/foods/" + id,
       {
         method: "delete",
       }

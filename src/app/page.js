@@ -1,6 +1,5 @@
 "use client";
-import Image from "next/image";
-import styles from "./page.module.css";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 import CustomerHeader from "./_components/CustomerHeader";
 import Footer from "./_components/Footer";
 import { useEffect, useState } from "react";
@@ -19,7 +18,9 @@ export default function Home() {
   }, []);
 
   const loadLocations = async () => {
-    let response = await fetch("http://localhost:3000/api/customer/locations");
+    let response = await fetch(
+      NEXT_PUBLIC_MONGO_URL + "/api/customer/locations"
+    );
     response = await response.json();
     if (response.success) {
       setLocations(response.result);
@@ -27,7 +28,7 @@ export default function Home() {
   };
 
   const loadRestaurants = async (params) => {
-    let url = "http://localhost:3000/api/customer";
+    let url = NEXT_PUBLIC_MONGO_URL + "/api/customer";
     if (params?.location) {
       url = url + "?location=" + params.location;
     } else if (params?.restaurant) {

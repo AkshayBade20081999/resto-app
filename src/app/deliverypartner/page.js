@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import DeliveryHeader from "../_components/DeliveryHeader";
 import { useRouter } from "next/navigation";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const Page = () => {
   const [loginMobile, setLoginMobile] = useState("");
@@ -25,7 +26,7 @@ const Page = () => {
   const handleSignUp = async () => {
     console.log(name, mobile, password, confirmPassword, city, address);
     let response = await fetch(
-      "http://localhost:3000/api/deliverypartners/signup",
+      NEXT_PUBLIC_MONGO_URL + "/api/deliverypartners/signup",
       {
         method: "post",
         body: JSON.stringify({ name, mobile, password, city, address }),
@@ -44,7 +45,7 @@ const Page = () => {
 
   const loginHandle = async () => {
     let response = await fetch(
-      "http://localhost:3000/api/deliverypartners/login",
+      NEXT_PUBLIC_MONGO_URL + "/api/deliverypartners/login",
       {
         method: "post",
         body: JSON.stringify({ mobile: loginMobile, password: loginPassword }),

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import DeliveryHeader from "../_components/DeliveryHeader";
 import { useRouter } from "next/navigation";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const Page = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const Page = () => {
   const getMyOrders = async () => {
     const deliveryData = JSON.parse(localStorage.getItem("delivery"));
     let response = await fetch(
-      "http://localhost:3000/api/deliverypartners/orders/" + deliveryData._id
+      NEXT_PUBLIC_MONGO_URL + "/api/deliverypartners/orders/" + deliveryData._id
     );
     response = await response.json();
     if (response.success) {

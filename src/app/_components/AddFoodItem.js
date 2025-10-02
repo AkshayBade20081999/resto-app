@@ -1,4 +1,5 @@
 import { useState } from "react";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const AddFoodItems = (props) => {
   const [name, setName] = useState("");
@@ -20,16 +21,19 @@ const AddFoodItems = (props) => {
     if (restaurantData) {
       resto_id = restaurantData._id;
     }
-    let response = await fetch("http://localhost:3000/api/restaurant/foods", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-        price,
-        img_path: path,
-        description,
-        resto_id,
-      }),
-    });
+    let response = await fetch(
+      NEXT_PUBLIC_MONGO_URL + "/api/restaurant/foods",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          price,
+          img_path: path,
+          description,
+          resto_id,
+        }),
+      }
+    );
     response = await response.json();
     if (response.success) {
       alert("Food item added");

@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+const NEXT_PUBLIC_MONGO_URL = process.env.NEXT_PUBLIC_MONGO_URL;
 
 const EditFoodItems = (props) => {
   console.log(props.params.id);
@@ -17,7 +18,7 @@ const EditFoodItems = (props) => {
 
   const handleLoadFoodItem = async () => {
     let response = await fetch(
-      "http://localhost:3000/api/restaurant/foods/edit/" + props.params.id
+      NEXT_PUBLIC_MONGO_URL + "/api/restaurant/foods/edit/" + props.params.id
     );
     response = await response.json();
     if (response.success) {
@@ -39,7 +40,7 @@ const EditFoodItems = (props) => {
     }
 
     let response = await fetch(
-      "http://localhost:3000/api/restaurant/foods/edit/" + props.params.id,
+      NEXT_PUBLIC_MONGO_URL + "/api/restaurant/foods/edit/" + props.params.id,
       {
         method: "PUT",
         body: JSON.stringify({ name, price, img_path: path, description }),
